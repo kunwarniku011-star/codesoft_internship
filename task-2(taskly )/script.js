@@ -1,12 +1,4 @@
-/* ==========================================================
-   TASK MANAGER - script.js
-   Sections: 1 Setup | 2 Storage | 3 Validation | 4 Task actions
-             5 Rendering | 6 Filters | 7 Theme | 8 Events | 9 Start
-   Each task is an object:
-     { id, title, category, priority, due, completed, createdAt }
-   ========================================================== */
 
-/* ---------- 1. SETUP: grab elements & app state ---------- */
 const STORAGE_KEY = "taskly_tasks";   // key used in Local Storage
 const THEME_KEY = "taskly_theme";
 
