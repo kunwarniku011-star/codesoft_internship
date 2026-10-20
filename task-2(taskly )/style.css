@@ -1,0 +1,948 @@
+/* ==========================================================
+   TASK MANAGER - style.css
+   Sections: 1 Variables | 2 Base | 3 Layout | 4 Form
+             5 Toolbar | 6 Task list | 7 Dialog | 8 Responsive
+   Dark mode works by changing the variables in section 1.
+   TIP: change --accent to re-colour the whole app.
+   ========================================================== */
+
+/* ---------- 1. VARIABLES (light theme is default) ---------- */
+:root {
+    --bg: #eceffa;
+    --surface: #ffffff;
+    --surface-2: #f4f6fd;
+    --text: #1c2040;
+    --muted: #6b7194;
+    --border: #dde2f3;
+    --accent: #5b4bdb;
+    --accent-soft: #e8e5ff;
+    --good: #1f9d6b;
+    --high: #e5484d;
+    --medium: #e8912d;
+    --low: #3b8ed9;
+    --shadow: 0 10px 30px rgba(40, 45, 110, 0.10);
+    --radius: 16px;
+    --font-head: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+    --font-body: "DM Sans", "Segoe UI", system-ui, sans-serif;
+}
+
+/* Dark theme: applied when <html data-theme="dark"> is set by script.js */
+[data-theme="dark"] {
+    --bg: #11121f;
+    --surface: #1a1c2e;
+    --surface-2: #222540;
+    --text: #eceefc;
+    --muted: #9a9fc4;
+    --border: #2d3052;
+    --accent: #8b7dff;
+    --accent-soft: #2b2760;
+    --good: #3ecf93;
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+/* ---------- 2. BASE ---------- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.5;
+    transition: background 0.3s, color 0.3s;
+}
+
+button,
+input,
+select {
+    font: inherit;
+    color: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+/* Visible keyboard focus for accessibility */
+:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* ---------- 3. LAYOUT ---------- */
+.app {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 32px 18px 48px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+/* Logo + app name sit side by side */
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.logo {
+    width: 54px;
+    height: 54px;
+    flex-shrink: 0;
+    filter: drop-shadow(0 8px 14px rgba(91, 75, 219, 0.35));
+}
+
+.header h1 {
+    font-family: var(--font-head);
+    font-size: 2.6rem;
+    font-weight: 800;
+    letter-spacing: -1.5px;
+}
+
+.subtitle {
+    color: var(--muted);
+    font-size: 0.95rem;
+}
+
+.icon-btn {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-size: 1.2rem;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s;
+}
+
+.icon-btn:hover {
+    transform: rotate(18deg) scale(1.06);
+}
+
+/* Statistics */
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.stat {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-num {
+    font-family: var(--font-head);
+    font-size: 2.1rem;
+    font-weight: 800;
+    line-height: 1.1;
+}
+
+.stat-label {
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+/* Give the "completed" number the success colour */
+.stat:nth-child(3) .stat-num {
+    color: var(--good);
+}
+
+.stat:nth-child(2) .stat-num {
+    color: var(--accent);
+}
+
+.progress {
+    grid-column: 1 / -1;
+    height: 8px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, var(--accent), var(--good));
+    border-radius: 99px;
+    transition: width 0.4s ease;
+}
+
+/* ---------- 4. FORM ---------- */
+.card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.add-form {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr auto;
+    gap: 12px;
+    align-items: start;
+    padding: 20px;
+    margin-bottom: 22px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+}
+
+.field label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--muted);
+}
+
+input[type="text"],
+input[type="date"],
+input[type="search"],
+select {
+    width: 100%;
+    padding: 11px 13px;
+    background: var(--surface-2);
+    border: 1.5px solid var(--border);
+    border-radius: 11px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+input.invalid {
+    border-color: var(--high);
+}
+
+.error {
+    color: var(--high);
+    font-size: 0.78rem;
+    min-height: 1em;
+}
+
+.btn {
+    padding: 11px 20px;
+    border-radius: 11px;
+    border: none;
+    font-weight: 700;
+    transition: transform 0.15s, opacity 0.2s;
+}
+
+.btn:active {
+    transform: scale(0.97);
+}
+
+.btn.primary {
+    background: var(--accent);
+    color: #fff;
+    align-self: end;
+    margin-bottom: 1.2em;
+}
+
+.btn.primary:hover {
+    opacity: 0.9;
+}
+
+.btn.ghost {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+}
+
+/* ---------- 5. TOOLBAR (search + filters) ---------- */
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.toolbar input[type="search"] {
+    flex: 1 1 200px;
+    width: auto;
+}
+
+.toolbar select {
+    width: auto;
+    flex: 0 1 auto;
+}
+
+.chips {
+    display: flex;
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 4px;
+    border: 1px solid var(--border);
+}
+
+.chip {
+    border: none;
+    background: transparent;
+    padding: 8px 14px;
+    border-radius: 9px;
+    font-weight: 500;
+    color: var(--muted);
+}
+
+.chip.active {
+    background: var(--accent);
+    color: #fff;
+}
+
+/* ---------- 6. TASK LIST ---------- */
+.task-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.task {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--surface);
+    padding: 14px 16px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border-left: 5px solid var(--low);
+    /* colour = priority */
+}
+
+.task.p-high {
+    border-left-color: var(--high);
+}
+
+.task.p-medium {
+    border-left-color: var(--medium);
+}
+
+.task.p-low {
+    border-left-color: var(--low);
+}
+
+.task input[type="checkbox"] {
+    width: 22px;
+    height: 22px;
+    accent-color: var(--good);
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.task-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.task-title {
+    font-weight: 700;
+    word-break: break-word;
+}
+
+.task.done .task-title {
+    text-decoration: line-through;
+    color: var(--muted);
+}
+
+.task.done {
+    opacity: 0.7;
+}
+
+.meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 5px;
+    font-size: 0.78rem;
+    color: var(--muted);
+}
+
+.tag {
+    background: var(--accent-soft);
+    color: var(--accent);
+    padding: 2px 10px;
+    border-radius: 99px;
+    font-weight: 700;
+}
+
+.due.overdue {
+    color: var(--high);
+    font-weight: 700;
+}
+
+.actions {
+    display: flex;
+    gap: 6px;
+}
+
+.actions button {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+}
+
+.actions button:hover {
+    border-color: var(--accent);
+}
+
+.actions .del:hover {
+    border-color: var(--high);
+}
+
+.empty {
+    text-align: center;
+    color: var(--muted);
+    padding: 44px 16px;
+}
+
+/* "Clear completed tasks" button */
+.btn.danger {
+    display: block;
+    margin: 22px auto 0;
+    background: transparent;
+    color: var(--high);
+    border: 2px solid var(--high);
+}
+
+.btn.danger:hover:not(:disabled) {
+    background: var(--high);
+    color: #fff;
+}
+
+.btn.danger:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.8rem;
+    margin-top: 30px;
+}
+
+/* ---------- 7. EDIT DIALOG ---------- */
+dialog {
+    margin: auto;
+    border: none;
+    border-radius: var(--radius);
+    padding: 26px;
+    width: min(440px, 92vw);
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: var(--shadow);
+}
+
+dialog::backdrop {
+    background: rgba(10, 12, 30, 0.55);
+}
+
+dialog h2 {
+    font-family: var(--font-head);
+    margin-bottom: 16px;
+}
+
+dialog .field {
+    margin-bottom: 14px;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 6px;
+}
+
+dialog .btn.primary {
+    margin-bottom: 0;
+}
+
+/* ---------- 8. RESPONSIVE ---------- */
+@media (max-width: 760px) {
+    .add-form {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .add-form .field.grow {
+        grid-column: 1 / -1;
+    }
+
+    .add-form .btn {
+        grid-column: 1 / -1;
+        margin-bottom: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .header h1 {
+        font-size: 2rem;
+    }
+
+    .logo {
+        width: 44px;
+        height: 44px;
+    }
+
+    .stat {
+        padding: 12px;
+    }
+
+    .stat-num {
+        font-size: 1.6rem;
+    }
+
+    .toolbar select,
+    .chips {
+        flex: 1 1 100%;
+        width: 100%;
+    }
+
+    .chip {
+        flex: 1;
+    }
+}
+
+/* Respect users who prefer less motion */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
+}
+
+
+/* ==========================================================
+   EXTRA HOVER & INTERACTIVE EFFECTS
+   To turn all effects off, delete everything from this comment
+   to the end of the file.
+   Sections: 1 Page | 2 Header & stats | 3 Form | 4 Buttons
+             5 Filters | 6 Task cards | 7 Dialog | 8 Reduced motion
+   ========================================================== */
+
+/* ---------- 1. PAGE ---------- */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Coloured text selection */
+::selection {
+    background: var(--accent);
+    color: #fff;
+}
+
+/* Slim custom scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 99px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}
+
+/* Soft glowing blobs behind the app (purely decorative) */
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    z-index: -1;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+body::before {
+    width: 340px;
+    height: 340px;
+    background: var(--accent);
+    top: -120px;
+    right: -80px;
+}
+
+body::after {
+    width: 300px;
+    height: 300px;
+    background: var(--good);
+    bottom: -120px;
+    left: -80px;
+    opacity: 0.22;
+}
+
+/* ---------- 2. HEADER & STATS ---------- */
+/* Title gets a gradient fill */
+.header h1 {
+    background: linear-gradient(90deg, var(--text), var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    transition: letter-spacing 0.3s;
+}
+
+.header h1:hover {
+    letter-spacing: 0;
+}
+
+/* Logo tilts on hover and the check mark draws itself again */
+.logo {
+    transition: transform 0.3s;
+    cursor: pointer;
+}
+
+.logo:hover {
+    transform: rotate(-8deg) scale(1.1);
+}
+
+.logo-check {
+    stroke-dasharray: 40;
+    stroke-dashoffset: 0;
+}
+
+.logo:hover .logo-check {
+    animation: drawCheck 0.5s ease;
+}
+
+@keyframes drawCheck {
+    from {
+        stroke-dashoffset: 40;
+    }
+
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+/* Theme button spins when clicked */
+.icon-btn:active {
+    transform: rotate(360deg) scale(0.9);
+    transition: transform 0.4s;
+}
+
+/* Stat cards lift and show an accent bar on hover */
+.stat {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.stat::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 4px;
+    width: 100%;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s;
+}
+
+.stat:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 16px 36px rgba(60, 50, 160, 0.22);
+}
+
+.stat:hover::after {
+    transform: scaleX(1);
+}
+
+.stat:nth-child(3)::after {
+    background: var(--good);
+}
+
+/* Moving shine across the progress bar */
+.progress-bar {
+    background-size: 200% 100%;
+    animation: shimmer 2.5s linear infinite;
+}
+
+@keyframes shimmer {
+    from {
+        background-position: 200% 0;
+    }
+
+    to {
+        background-position: -200% 0;
+    }
+}
+
+/* ---------- 3. FORM ---------- */
+.add-form {
+    transition: box-shadow 0.3s, transform 0.3s;
+}
+
+.add-form:focus-within {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 40px rgba(60, 50, 160, 0.20);
+}
+
+/* Label turns accent-coloured while its field is focused */
+.field:focus-within label {
+    color: var(--accent);
+}
+
+.field label {
+    transition: color 0.2s;
+}
+
+input:hover,
+select:hover {
+    border-color: var(--accent);
+}
+
+select {
+    cursor: pointer;
+}
+
+/* Error message shakes once when it appears */
+.error:not(:empty) {
+    animation: shake 0.35s;
+}
+
+@keyframes shake {
+    25% {
+        transform: translateX(-5px);
+    }
+
+    50% {
+        transform: translateX(5px);
+    }
+
+    75% {
+        transform: translateX(-3px);
+    }
+}
+
+/* ---------- 4. BUTTONS ---------- */
+.btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn.primary:hover {
+    opacity: 1;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(91, 75, 219, 0.45);
+}
+
+/* Light sweep across the primary button */
+.btn.primary::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -80%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.6s;
+}
+
+.btn.primary:hover::before {
+    left: 130%;
+}
+
+.btn.ghost:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* "Clear completed tasks" button: lifts with a red glow on hover */
+.btn.danger {
+    transition: background 0.25s, color 0.25s, transform 0.2s, box-shadow 0.25s;
+}
+
+.btn.danger:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(229, 72, 77, 0.4);
+}
+
+/* ---------- 5. FILTERS ---------- */
+.chip {
+    transition: background 0.25s, color 0.25s, transform 0.2s;
+}
+
+.chip:hover:not(.active) {
+    background: var(--accent-soft);
+    color: var(--accent);
+    transform: translateY(-2px);
+}
+
+.chip.active {
+    box-shadow: 0 4px 12px rgba(91, 75, 219, 0.4);
+}
+
+.toolbar input[type="search"]:focus {
+    transform: scale(1.015);
+}
+
+.toolbar input[type="search"] {
+    transition: transform 0.25s, border-color 0.2s, box-shadow 0.2s;
+}
+
+/* ---------- 6. TASK CARDS ---------- */
+.task {
+    transition: transform 0.25s, box-shadow 0.25s, opacity 0.3s, border-left-width 0.2s;
+}
+
+.task:hover {
+    transform: translateX(6px) translateY(-2px);
+    box-shadow: 0 14px 32px rgba(60, 50, 160, 0.20);
+    border-left-width: 9px;
+}
+
+.task.done:hover {
+    opacity: 1;
+}
+
+/* Checkbox pops when ticked */
+.task input[type="checkbox"] {
+    transition: transform 0.2s;
+}
+
+.task input[type="checkbox"]:hover {
+    transform: scale(1.2);
+}
+
+.task input[type="checkbox"]:checked {
+    animation: pop 0.3s;
+}
+
+@keyframes pop {
+    50% {
+        transform: scale(1.45);
+    }
+}
+
+/* Title colour change on hover */
+.task-title {
+    transition: color 0.2s;
+}
+
+.task:not(.done):hover .task-title {
+    color: var(--accent);
+}
+
+/* Category tag grows slightly */
+.tag {
+    transition: transform 0.2s, background 0.2s, color 0.2s;
+    display: inline-block;
+}
+
+.tag:hover {
+    transform: scale(1.08);
+    background: var(--accent);
+    color: #fff;
+}
+
+/* Action buttons: hidden-ish until the card is hovered (always visible on touch screens) */
+.actions button {
+    transition: transform 0.2s, background 0.2s, border-color 0.2s;
+}
+
+@media (hover: hover) {
+    .actions {
+        opacity: 0.35;
+        transition: opacity 0.25s;
+    }
+
+    .task:hover .actions,
+    .actions:focus-within {
+        opacity: 1;
+    }
+}
+
+.actions button:hover {
+    transform: scale(1.15) rotate(-8deg);
+    background: var(--accent-soft);
+}
+
+.actions .del:hover {
+    background: rgba(229, 72, 77, 0.15);
+    transform: scale(1.15) rotate(8deg);
+}
+
+.actions button:active {
+    transform: scale(0.9);
+}
+
+/* Empty message gently floats */
+.empty {
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    50% {
+        transform: translateY(-6px);
+    }
+}
+
+/* ---------- 7. DIALOG ---------- */
+dialog[open] {
+    animation: dialogIn 0.3s ease;
+}
+
+dialog[open]::backdrop {
+    animation: fadeIn 0.3s ease;
+    backdrop-filter: blur(4px);
+}
+
+@keyframes dialogIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+}
+
+/* ---------- 8. REDUCED MOTION ---------- */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+}

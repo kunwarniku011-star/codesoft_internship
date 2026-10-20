@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taskly - To-Do List</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=DM+Sans:wght@400;500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Browser-tab icon (same logo, embedded so no extra file is needed) -->
+    <link rel="icon"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='14' fill='%235b4bdb'/%3E%3Cpath d='M14 25L21 32L34 17' fill='none' stroke='white' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app">
+
+        <!-- ===== HEADER: title + dark mode switch ===== -->
+        <header class="header">
+            <div class="brand">
+                <!-- LOGO: a rounded square with a check mark (inline SVG, no image file needed).
+             To use your own logo instead, replace this <svg> with: <img class="logo" src="logo.png" alt="Taskly logo"> -->
+                <svg class="logo" width="54" height="54" viewBox="0 0 48 48" role="img" aria-label="Taskly logo">
+                    <defs>
+                        <linearGradient id="logoGrad" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0" style="stop-color: var(--accent)" />
+                            <stop offset="1" style="stop-color: var(--good)" />
+                        </linearGradient>
+                    </defs>
+                    <rect width="48" height="48" rx="14" fill="url(#logoGrad)" />
+                    <path class="logo-check" d="M14 25 L21 32 L34 17" fill="none" stroke="#fff" stroke-width="5"
+                        stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <div>
+                    <h1>Taskly</h1>
+                    <p class="subtitle" id="todayLabel"></p>
+                </div>
+            </div>
+            <button class="icon-btn" id="themeToggle" aria-label="Switch between light and dark mode">
+                <span id="themeIcon">🌙</span>
+            </button>
+        </header>
+
+        <!-- ===== STATISTICS: total, pending, completed + progress bar ===== -->
+        <section class="stats" aria-label="Task statistics">
+            <div class="stat"><span class="stat-num" id="statTotal">0</span><span class="stat-label">Total</span></div>
+            <div class="stat"><span class="stat-num" id="statPending">0</span><span class="stat-label">Pending</span>
+            </div>
+            <div class="stat"><span class="stat-num" id="statDone">0</span><span class="stat-label">Completed</span>
+            </div>
+            <div class="progress" aria-hidden="true">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </section>
+
+        <!-- ===== ADD TASK FORM ===== -->
+        <form class="card add-form" id="addForm" novalidate>
+            <div class="field grow">
+                <label for="taskTitle">New task</label>
+                <input type="text" id="taskTitle" placeholder="What do you need to get done?" maxlength="80"
+                    autocomplete="off">
+                <small class="error" id="titleError"></small>
+            </div>
+
+            <div class="field">
+                <label for="taskCategory">Category</label>
+                <select id="taskCategory">
+                    <option value="Personal">Personal</option>
+                    <option value="Work">Work</option>
+                    <option value="Study">Study</option>
+                    <option value="Health">Health</option>
+                    <option value="Shopping">Shopping</option>
+                    <option value="travelling">Travel</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="taskPriority">Priority</label>
+                <select id="taskPriority">
+                    <option value="low">Low</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="high">High</option>
+                    <option value="urgent">Urgent</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="taskDue">Due date</label>
+                <input type="date" id="taskDue">
+                <small class="error" id="dueError"></small>
+            </div>
+
+            <button type="submit" class="btn primary">Add task</button>
+        </form>
+
+        <!-- ===== SEARCH + FILTERS + SORT ===== -->
+        <section class="toolbar" aria-label="Search and filter tasks">
+            <input type="search" id="searchInput" placeholder="Search tasks..." aria-label="Search tasks">
+
+            <div class="chips" id="statusFilter" role="group" aria-label="Filter by status">
+                <button class="chip active" data-status="all">All</button>
+                <button class="chip" data-status="pending">Pending</button>
+                <button class="chip" data-status="completed">Completed</button>
+            </div>
+
+            <select id="categoryFilter" aria-label="Filter by category">
+                <option value="all">All categories</option>
+                <option value="Personal">Personal</option>
+                <option value="Work">Work</option>
+                <option value="Study">Study</option>
+                <option value="Health">Health</option>
+                <option value="Shopping">Shopping</option>
+            </select>
+
+            <select id="priorityFilter" aria-label="Filter by priority">
+                <option value="all">All priorities</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+            </select>
+
+            <select id="sortSelect" aria-label="Sort tasks">
+                <option value="newest">Newest first</option>
+                <option value="due">Due date</option>
+                <option value="priority">Priority</option>
+            </select>
+        </section>
+
+        <!-- ===== TASK LIST (filled by script.js) ===== -->
+        <ul class="task-list" id="taskList"></ul>
+        <div class="empty" id="emptyState" hidden></div>
+
+        <!-- Removes every completed task (disabled when there are none) -->
+        <button class="btn danger" id="clearDone" type="button">🗑️ Clear completed tasks</button>
+
+        <!-- ADD YOUR OWN DETAILS HERE (name, course, date, etc.) -->
+        <footer class="footer">Built by NIKHIL KUNWAR </footer>
+    </div>
+
+    <!-- ===== EDIT DIALOG ===== -->
+    <dialog id="editDialog">
+        <form id="editForm" novalidate>
+            <h2>Edit task</h2>
+
+            <div class="field">
+                <label for="editTitle">Task</label>
+                <input type="text" id="editTitle" maxlength="80" autocomplete="off">
+                <small class="error" id="editTitleError"></small>
+            </div>
+
+            <div class="row">
+                <div class="field">
+                    <label for="editCategory">Category</label>
+                    <select id="editCategory">
+                        <option value="Personal">Personal</option>
+                        <option value="Work">Work</option>
+                        <option value="Study">Study</option>
+                        <option value="Health">Health</option>
+                        <option value="Shopping">Shopping</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="editPriority">Priority</label>
+                    <select id="editPriority">
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="editDue">Due date</label>
+                <input type="date" id="editDue">
+            </div>
+
+            <div class="dialog-actions">
+                <button type="button" class="btn ghost" id="cancelEdit">Cancel</button>
+                <button type="submit" class="btn primary">Save changes</button>
+            </div>
+        </form>
+    </dialog>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
