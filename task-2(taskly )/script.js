@@ -5,7 +5,7 @@ const THEME_KEY = "taskly_theme";
 const $ = (id) => document.getElementById(id);   // short helper
 
 const addForm = $("addForm"), taskTitle = $("taskTitle"), taskCategory = $("taskCategory"),
-      taskPriority = $("taskPriority"), taskDue = $("taskDue");
+  taskPriority = $("taskPriority"), taskDue = $("taskDue");
 const taskList = $("taskList"), emptyState = $("emptyState");
 const editDialog = $("editDialog"), editForm = $("editForm");
 
