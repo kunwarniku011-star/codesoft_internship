@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pocket Ledger – Expense Tracker</title>
+
+    <!-- Optional font. Works offline too (falls back to system fonts). -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="top">
+        <h1>Pocket Ledger</h1>
+        <p>Track what comes in, see where it goes.</p>
+    </header>
+
+    <main class="layout">
+
+        <!-- SUMMARY CARDS -->
+        <section class="summary" aria-label="Summary">
+            <article class="card balance">
+                <span class="label">Current balance</span>
+                <strong id="balance">₹0.00</strong>
+            </article>
+            <article class="card income">
+                <span class="label">Total income</span>
+                <strong id="totalIncome">₹0.00</strong>
+            </article>
+            <article class="card expense">
+                <span class="label">Total expenses</span>
+                <strong id="totalExpense">₹0.00</strong>
+            </article>
+        </section>
+
+        <!-- ADD / EDIT FORM -->
+        <section class="panel" aria-labelledby="formTitle">
+            <h2 id="formTitle">Add transaction</h2>
+            <form id="txForm" novalidate>
+                <div class="type-toggle" role="radiogroup" aria-label="Transaction type">
+                    <label><input type="radio" name="type" value="expense" checked><span>Expense</span></label>
+                    <label><input type="radio" name="type" value="income"><span>Income</span></label>
+                </div>
+
+                <label class="field">Description
+                    <input type="text" id="description" maxlength="60" placeholder="e.g. Grocery shopping" required>
+                </label>
+
+                <div class="row">
+                    <label class="field">Amount
+                        <input type="number" id="amount" min="0.01" step="0.01" placeholder="0.00" required>
+                    </label>
+                    <label class="field">Date
+                        <input type="date" id="date" required>
+                    </label>
+                </div>
+
+                <label class="field">Category
+                    <select id="category" required></select>
+                </label>
+
+                <p class="error" id="formError" role="alert"></p>
+
+                <div class="actions">
+                    <button type="submit" class="btn primary" id="submitBtn">Add transaction</button>
+                    <button type="button" class="btn ghost" id="cancelEdit" hidden>Cancel edit</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- CATEGORY BREAKDOWN -->
+        <section class="panel" aria-labelledby="breakTitle">
+            <h2 id="breakTitle">Spending by category</h2>
+            <div id="breakdown" class="breakdown"></div>
+        </section>
+
+        <!-- HISTORY -->
+        <section class="panel history" aria-labelledby="histTitle">
+            <div class="history-head">
+                <h2 id="histTitle">Transaction history</h2>
+                <button class="btn ghost small" id="exportBtn">Export CSV</button>
+            </div>
+
+            <div class="filters">
+                <select id="filterType" aria-label="Filter by type">
+                    <option value="all">All types</option>
+                    <option value="income">Income</option>
+                    <option value="expense">Expense</option>
+                </select>
+                <select id="filterCategory" aria-label="Filter by category"></select>
+                <input type="month" id="filterMonth" aria-label="Filter by month">
+                <input type="search" id="search" placeholder="Search description" aria-label="Search">
+                <button class="btn ghost small" id="clearFilters">Clear</button>
+            </div>
+
+            <ul id="txList" class="tx-list"></ul>
+            <p id="emptyState" class="empty" hidden>No transactions yet. Add your first one above.</p>
+        </section>
+
+    </main>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
